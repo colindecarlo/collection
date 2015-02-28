@@ -34,9 +34,14 @@ class Coolection implements ArrayAccess, Countable
     {
         $map = clone $this;
         for ($i = 0; $i < $this->size; $i++) {
-            $return[$i] = $func($this->elems[$i]);
+            $map[$i] = $func($this->elems[$i]);
         }
         return $map;
+    }
+
+    public function asPlainArray()
+    {
+        return $this->elems->toArray();
     }
 
     public function offsetGet($index)
