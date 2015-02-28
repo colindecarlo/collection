@@ -2,6 +2,10 @@
 
 namespace Coolection;
 
+use ArrayAccess;
+use Countable;
+use SplFixedArray;
+
 /*
  * (c) Colin DeCarlo <colin@thedecarlos.ca>
  *
