@@ -51,7 +51,7 @@ class Coolection implements ArrayAccess, Countable
 
     public function offsetGet($index)
     {
-        return $index < $size ? $this->elems[$index] : null;
+        return $index < $this->size ? $this->elems[$index] : null;
     }
 
     public function offsetSet($index, $value)
