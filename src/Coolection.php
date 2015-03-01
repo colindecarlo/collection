@@ -20,13 +20,18 @@ class Coolection implements ArrayAccess, Countable
 
     public function __construct($size)
     {
+        if (is_array($size)) {
+            $this->fromArray($size);
+            return;
+        }
+
         $this->elems = new SplFixedArray($size);
         $this->size = $size;
     }
 
-    public static function fromArray($array)
+    protected function fromArray($array)
     {
-        $this->elems = new SplFixedArray($array);
+        $this->elems = SplFixedArray::fromArray($array, false);
         $this->size = count($this);
     }
 
