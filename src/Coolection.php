@@ -37,11 +37,62 @@ class Coolection implements ArrayAccess, Countable
 
     public function map($func)
     {
-        $map = clone $this;
+        $mapped = new SplFixedArray($this->size);
         for ($i = 0; $i < $this->size; $i++) {
-            $map[$i] = $func($this->elems[$i]);
+            $mapped[$i] = $func($this->elems[$i]);
         }
-        return $map;
+        return $mapped;
+    }
+
+    public function each($func)
+    {
+        for ($i = 0; $i < $this->size; $i++) {
+            $func($this->elems[$i]);
+        }
+        return $this;
+    }
+
+    public function reduce($func, $carry)
+    {
+        for ($i = 0; $i < $this->size; $i++) {
+            $carry = $func($carry, $this->elems[$i]);
+        }
+        return $carry;
+    }
+
+    public function filter($func)
+    {
+        $filtered = [];
+        for ($i = 0, $k = 0; $i < $this->size; $i++) {
+            if (! $func($this->elems[$i])) {
+                continue;
+            }
+            $filtered[] = $this->elems[$i];
+        }
+        return new static($filtered);
+    }
+
+    public function slice($offset, $length = null)
+    {
+        if ($offset < 0) {
+            $offset = $this->size - $offset - 1;
+        }
+
+        if ($length === null) {
+            $length = $this->size - $offset;
+        }
+
+        if ($length < 0) {
+            $length = $this->size - $offset - $length;
+        }
+
+        $length = min($offset + $lenth, $this->size);
+
+        $sliced = new SplFixedArray($length);
+        for ($i = 0; $i < $length; $i++) {
+            $sliced[$i] = $this->elems[$offset + $i];
+        }
+        return $sliced;
     }
 
     public function asPlainArray()
