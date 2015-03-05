@@ -16,7 +16,9 @@
         "issues": "https://github.com/colindecarlo/coolection/issues",
         "source": "https://github.com/colindecarlo/coolection"
     },
-    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "~4.5"
+    },
     "autoload": {
         "psr-4": {
             "Coolection\\": "src"
