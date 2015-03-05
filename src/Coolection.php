@@ -2,9 +2,11 @@
 
 namespace Coolection;
 
-use ArrayAccess;
 use Countable;
+use ArrayAccess;
 use SplFixedArray;
+use OutOfBoundsException;
+use InvalidArgumentException;
 
 /*
  * (c) Colin DeCarlo <colin@thedecarlos.ca>
@@ -60,8 +62,14 @@ class Coolection implements ArrayAccess, Countable
         return $carry;
     }
 
-    public function filter($func)
+    public function filter($func = null)
     {
+        $identity = function ($elem) {
+            return $elem;
+        };
+
+        $func = $func ?: $identity;
+
         $filtered = [];
         for ($i = 0, $k = 0; $i < $this->size; $i++) {
             if (! $func($this->elems[$i])) {
@@ -75,7 +83,7 @@ class Coolection implements ArrayAccess, Countable
     public function slice($offset, $length = null)
     {
         if ($offset < 0) {
-            $offset = $this->size - $offset - 1;
+            $offset = $this->size + $offset;
         }
 
         if ($length === null) {
@@ -83,10 +91,16 @@ class Coolection implements ArrayAccess, Countable
         }
 
         if ($length < 0) {
-            $length = $this->size - $offset - $length;
+            $length = $this->size - $offset + $length;
         }
 
-        $length = min($offset + $lenth, $this->size);
+        $length = $offset + $length < $this->size ? $length : $this->size - $offset;
+
+        if ($length < 0) {
+            throw new InvalidArgumentException(
+                'This slice would have a negative length, refer to the documentation for usage.'
+            );
+        }
 
         $sliced = new SplFixedArray($length);
         for ($i = 0; $i < $length; $i++) {
@@ -95,37 +109,44 @@ class Coolection implements ArrayAccess, Countable
         return $sliced;
     }
 
-    public function asPlainArray()
+    public function toArray()
     {
         return $this->elems->toArray();
     }
 
     public function offsetGet($index)
     {
-        return $index < $this->size ? $this->elems[$index] : null;
+        $this->assertBoundaries($index);
+
+        return $this->elems[$index];
     }
 
     public function offsetSet($index, $value)
     {
-        if ($index >= $this->size) {
-            return;
-        }
+        $this->assertBoundaries($index);
 
         $this->elems[$index] = $value;
     }
 
     public function offsetExists($index)
     {
+        $this->assertBoundaries($index);
+
         return $index < $this->size;
     }
 
     public function offsetUnset($index)
     {
-        if ($index < $this->size) {
-            return;
-        }
+        $this->assertBoundaries($index);
 
         unset($this->elems[$index]);
+    }
+
+    protected function assertBoundaries($index)
+    {
+        if ($index < 0 || $index >= $this->size) {
+            throw new OutOfBoundsException('Invalid index' . $index);
+        }
     }
 
     public function count()
