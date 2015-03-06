@@ -145,7 +145,7 @@ class Coolection implements ArrayAccess, Countable
     protected function assertBoundaries($index)
     {
         if ($index < 0 || $index >= $this->size) {
-            throw new OutOfBoundsException('Invalid index' . $index);
+            throw new OutOfBoundsException('Invalid index ' . $index);
         }
     }
 
