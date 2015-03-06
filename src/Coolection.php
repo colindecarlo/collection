@@ -39,7 +39,7 @@ class Coolection implements ArrayAccess, Countable
 
     public function map($func)
     {
-        $mapped = new SplFixedArray($this->size);
+        $mapped = new static($this->size);
         for ($i = 0; $i < $this->size; $i++) {
             $mapped[$i] = $func($this->elems[$i]);
         }
