@@ -109,6 +109,39 @@ class Coolection implements ArrayAccess, Countable
         return $sliced;
     }
 
+    public function flatten($flattenWith = null)
+    {
+        $flattenWith = $flattenWith ?: function ($elem) {
+            if (is_array($elem) || $elem instanceof Iterator) {
+                return $elem;
+            }
+
+            if ($elem instanceof Traversable) {
+                $bits = [];
+                foreach ($elem as $bit) {
+                    $bits[] = $bit;
+                }
+                return $bits;
+            }
+
+            return [$elem];
+        };
+
+        $mapped = $this->map($flattenWith);
+
+        $totalElements = $mapped->reduce(function ($sum, $elem) {
+            return $sum + count($elem);
+        }, 0);
+
+        $index = 0;
+        return $mapped->reduce(function ($flattened, $elem) use (&$index) {
+            for ($i = 0; $i < count($elem); $i++) {
+                $flattened[$index++] = $elem[$i];
+            }
+            return $flattened;
+        }, new static($totalElements));
+    }
+
     public function toArray()
     {
         return $this->elems->toArray();

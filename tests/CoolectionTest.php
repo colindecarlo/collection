@@ -190,4 +190,40 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
             [3]
         ];
     }
+
+    public function test_that_flattening_a_collection_using_the_default_flatten_function_flattens_a_two_dimensional_array()
+    {
+        $arrayOfArrays = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [10]
+        ];
+
+        $coolection = new Coolection($arrayOfArrays);
+        $flattened = $coolection->flatten();
+
+        $this->assertCount(10, $flattened);
+        $this->assertEquals([1,2, 3, 4, 5, 6, 7, 8, 9, 10], $flattened->toArray());
+    }
+
+    public function test_that_flattening_a_collection_using_a_custom_function_flattens_the_collection_as_expected()
+    {
+        $arrayOfArrays = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [10]
+        ];
+
+        $dontFlatten = function ($elem) {
+            return [$elem];
+        };
+
+        $coolection = new Coolection($arrayOfArrays);
+        $flattened = $coolection->flatten($dontFlatten);
+
+        $this->assertCount(4, $flattened);
+        $this->assertEquals($arrayOfArrays, $flattened->toArray());
+    }
 }
