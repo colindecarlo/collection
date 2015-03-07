@@ -339,7 +339,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
     public function test_that_the_last_method_returns_the_last_matching_element_of_the_collection_when_called_with_a_scalar_argument()
     {
         $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertEquals(3, $speedBag->last(3));
+        $this->assertEquals(1, $speedBag->last(1));
     }
 
     public function test_that_the_last_method_returns_null_when_no_matching_scalar_element_is_found_in_the_collection()

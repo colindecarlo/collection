@@ -172,7 +172,7 @@ class SpeedBag implements ArrayAccess, Countable
 
         $matching = $this->getMatchingFunction($matching);
 
-        for ($i = $this->size - 1; $i > 0; $i--) {
+        for ($i = $this->size - 1; $i >= 0; $i--) {
             if ($matching($this->elems[$i])) {
                 return $this->elems[$i];
             }
