@@ -289,7 +289,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
     public function test_that_the_first_method_returns_the_first_matching_element_of_the_collection_when_called_with_a_scalar_argument()
     {
         $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertEquals(3, $speedBag->first(3));
+        $this->assertEquals(5, $speedBag->first(5));
     }
 
     public function test_that_the_first_method_returns_null_when_no_matching_scalar_element_is_found_in_the_collection()
