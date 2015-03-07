@@ -192,16 +192,7 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function reverse()
     {
-        $reversed = new static($this->size);
-
-        $tail = $this->size - 1;
-        $limit = floor($tail / 2);
-        for ($i = 0; $i <= $limit; $i++) {
-            $reversed[$i] = $this->elems[$tail - $i];
-            $reversed[$tail - $i] = $this->elems[$i];
-        }
-
-        return $reversed;
+        return new static(array_reverse($this->toArray()));
     }
 
     public function toArray()
