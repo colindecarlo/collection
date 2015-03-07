@@ -329,4 +329,54 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull($speedBag->first($matcher));
     }
+
+    public function test_that_the_last_method_returns_the_last_element_of_the_collection_when_called_without_an_argument()
+    {
+        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
+        $this->assertEquals(5, $speedBag->last());
+    }
+
+    public function test_that_the_last_method_returns_the_last_matching_element_of_the_collection_when_called_with_a_scalar_argument()
+    {
+        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
+        $this->assertEquals(3, $speedBag->last(3));
+    }
+
+    public function test_that_the_last_method_returns_null_when_no_matching_scalar_element_is_found_in_the_collection()
+    {
+        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
+        $this->assertNull($speedBag->last(42));
+    }
+
+    public function test_that_the_last_method_returns_the_last_matching_element_of_the_collection_when_called_with_a_custom_function()
+    {
+        $speedBag = new SpeedBag([
+            'Lorem ipsum dolor',
+            'sit amet consectetur',
+            'adipiscing elit sed',
+            'do'
+        ]);
+
+        $matcher = function ($elem) {
+            return false !== strpos($elem, 'sit amet');
+        };
+
+        $this->assertEquals('sit amet consectetur', $speedBag->last($matcher));
+    }
+
+    public function test_that_the_last_method_returns_null_when_no_matching_element_is_found_in_the_collection_using_a_custom_function()
+    {
+        $speedBag = new SpeedBag([
+            'Lorem ipsum dolor',
+            'sit amet consectetur',
+            'adipiscing elit sed',
+            'do'
+        ]);
+
+        $matcher = function ($elem) {
+            return false !== strpos($elem, 'foo bar baz');
+        };
+
+        $this->assertNull($speedBag->last($matcher));
+    }
 }

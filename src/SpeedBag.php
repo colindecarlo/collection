@@ -153,11 +153,7 @@ class SpeedBag implements ArrayAccess, Countable
             return $this->elems[0];
         }
 
-        $matching = is_callable($matching)
-            ? $matching
-            : function ($elem) use ($matching) {
-                return $elem == $matching;
-            };
+        $matching = $this->getMatchingFunction($matching);
 
         for ($i = 0; $i < $this->size; $i++) {
             if ($matching($this->elems[$i])) {
@@ -166,6 +162,32 @@ class SpeedBag implements ArrayAccess, Countable
         }
 
         return null;
+    }
+
+    public function last($matching = null)
+    {
+        if (null === $matching) {
+            return $this->elems[$this->size - 1];
+        }
+
+        $matching = $this->getMatchingFunction($matching);
+
+        for ($i = $this->size - 1; $i > 0; $i--) {
+            if ($matching($this->elems[$i])) {
+                return $this->elems[$i];
+            }
+        }
+
+        return null;
+    }
+
+    protected function getMatchingFunction($matching)
+    {
+        return is_callable($matching)
+            ? $matching
+            : function ($elem) use ($matching) {
+                return $elem == $matching;
+            };
     }
 
     public function toArray()
