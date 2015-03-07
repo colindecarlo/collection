@@ -226,4 +226,27 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertCount(4, $flattened);
         $this->assertEquals($arrayOfArrays, $flattened->toArray());
     }
+
+    public function test_that_flattening_a_collection_using_a_recursive_function_flattens_the_collection_as_expected()
+    {
+        $deepNest = [
+            [[1, 2], [3, 4]],
+            [[5, 6], [7, 8]],
+            [[9, 10]]
+        ];
+
+        $recursiveFlatten = function ($elem) {
+            $flattened = [];
+            array_walk_recursive($elem, function ($elem) use (&$flattened) {
+                $flattened[] = $elem;
+            });
+            return $flattened;
+        };
+
+        $speedBag = new SpeedBag($deepNest);
+        $flattened = $speedBag->flatten($recursiveFlatten);
+
+        $this->assertCount(10, $flattened);
+        $this->assertEquals([1,2, 3, 4, 5, 6, 7, 8, 9, 10], $flattened->toArray());
+    }
 }
