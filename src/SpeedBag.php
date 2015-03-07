@@ -153,11 +153,11 @@ class SpeedBag implements ArrayAccess, Countable
             return $this->elems[0];
         }
 
-        if (! is_callable($matching)) {
-            $matching = function ($elem) use ($matching) {
+        $matching = is_callable($matching)
+            ? $matching
+            : function ($elem) use ($matching) {
                 return $elem == $matching;
             };
-        }
 
         for ($i = 0; $i < $this->size; $i++) {
             if ($matching($this->elems[$i])) {
