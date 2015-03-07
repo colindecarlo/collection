@@ -1,6 +1,6 @@
 {
-    "name": "colindecarlo/coolection",
-    "description": "Coolection is a collection library focused on delivering faster access to and iteration of its members.",
+    "name": "colindecarlo/speed-bag",
+    "description": "Speed Bag is a collection library focused on delivering faster access to and iteration of its members.",
     "version": "0.0.0",
     "type": "library",
     "keywords": ["array", "collection", "functional", "iterator", "utility"],
@@ -13,15 +13,15 @@
     ],
     "support": {
         "email": "colin@thedecarlos.ca",
-        "issues": "https://github.com/colindecarlo/coolection/issues",
-        "source": "https://github.com/colindecarlo/coolection"
+        "issues": "https://github.com/colindecarlo/speed-bag/issues",
+        "source": "https://github.com/colindecarlo/speed-bag"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.5"
     },
     "autoload": {
         "psr-4": {
-            "Coolection\\": "src"
+            "SpeedBag\\": "src"
         }
     }
 }

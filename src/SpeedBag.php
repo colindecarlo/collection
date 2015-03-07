@@ -1,6 +1,6 @@
 <?php
 
-namespace Coolection;
+namespace SpeedBag;
 
 use Countable;
 use ArrayAccess;
@@ -15,7 +15,7 @@ use InvalidArgumentException;
  * file that was distributed with this source code.
 */
 
-class Coolection implements ArrayAccess, Countable
+class SpeedBag implements ArrayAccess, Countable
 {
     protected $elems;
     protected $size;

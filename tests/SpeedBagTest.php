@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
 */
 
-use Coolection\Coolection;
+use SpeedBag\SpeedBag;
 
-class CoolectionTest extends PHPUnit_Framework_TestCase
+class SpeedBagTest extends PHPUnit_Framework_TestCase
 {
     public function test_that_the_each_method_visits_every_element_of_the_collection()
     {
-        $coolection = new Coolection([
+        $speedBag = new SpeedBag([
             (object)['value' => true],
             (object)['value' => true],
             (object)['value' => true]
@@ -23,23 +23,23 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
             $elem->value = ! $elem->value;
         };
 
-        $coolection->each($negate);
+        $speedBag->each($negate);
 
-        $this->assertFalse($coolection[0]->value);
-        $this->assertFalse($coolection[1]->value);
-        $this->assertFalse($coolection[2]->value);
+        $this->assertFalse($speedBag[0]->value);
+        $this->assertFalse($speedBag[1]->value);
+        $this->assertFalse($speedBag[2]->value);
     }
 
-    public function test_that_the_map_method_returns_a_new_coolection_of_mapped_elements()
+    public function test_that_the_map_method_returns_a_new_SpeedBag_of_mapped_elements()
     {
-        $coolection = new Coolection(['foo', 'bar', 'baz']);
-        $mapped = $coolection->map('strtoupper');
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $mapped = $speedBag->map('strtoupper');
 
-        $this->assertNotSame($coolection, $mapped);
+        $this->assertNotSame($speedBag, $mapped);
 
-        $this->assertEquals('foo', $coolection[0]);
-        $this->assertEquals('bar', $coolection[1]);
-        $this->assertEquals('baz', $coolection[2]);
+        $this->assertEquals('foo', $speedBag[0]);
+        $this->assertEquals('bar', $speedBag[1]);
+        $this->assertEquals('baz', $speedBag[2]);
 
         $this->assertEquals('FOO', $mapped[0]);
         $this->assertEquals('BAR', $mapped[1]);
@@ -48,9 +48,9 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_reduce_method_returns_a_reduced_value_of_the_collection()
     {
-        $coolection = new Coolection([1, 2, 3]);
+        $speedBag = new SpeedBag([1, 2, 3]);
 
-        $total = $coolection->reduce(function ($sum, $num) {
+        $total = $speedBag->reduce(function ($sum, $num) {
             return $sum + $num;
         }, 0);
 
@@ -59,13 +59,13 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_filter_method_removes_expected_elements_from_the_collection()
     {
-        $coolection = new Coolection([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $speedBag = new SpeedBag([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        $odds = $coolection->filter(function ($elem) {
+        $odds = $speedBag->filter(function ($elem) {
             return $elem % 2;
         });
 
-        $this->assertNotSame($coolection, $odds);
+        $this->assertNotSame($speedBag, $odds);
 
         $this->assertCount(5, $odds);
 
@@ -78,7 +78,7 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_filter_method_removes_falsey_elements_from_the_collection_by_default()
     {
-        $coolection = new Coolection([
+        $speedBag = new SpeedBag([
             false,
             0,
             0.0,
@@ -88,7 +88,7 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
             null
         ]);
 
-        $shouldBeEmpty = $coolection->filter();
+        $shouldBeEmpty = $speedBag->filter();
 
         $this->assertCount(0, $shouldBeEmpty);
     }
@@ -98,14 +98,14 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_the_slice_method_returns_the_expected_portion_of_the_collection($offset, $length, $expected)
     {
-        $coolection = new Coolection([
+        $speedBag = new SpeedBag([
             'lorem', 'ipsum', 'dolor', 'sit', 'amet',
             'consectetur', 'adipiscing', 'elit', 'sed', 'do'
         ]);
 
-        $slice = $coolection->slice($offset, $length);
+        $slice = $speedBag->slice($offset, $length);
 
-        $this->assertNotSame($coolection, $slice);
+        $this->assertNotSame($speedBag, $slice);
 
         $this->assertEquals($expected, $slice->toArray());
     }
@@ -131,12 +131,12 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_the_slice_method_throws_an_exception_when_the_resulting_slice_would_contain_less_than_zero_elements()
     {
-        $coolection = new Coolection([
+        $speedBag = new SpeedBag([
             'lorem', 'ipsum', 'dolor', 'sit', 'amet',
             'consectetur', 'adipiscing', 'elit', 'sed', 'do'
         ]);
 
-        $coolection->slice(9, -2);
+        $speedBag->slice(9, -2);
     }
 
     /**
@@ -146,8 +146,8 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_accessing_invalid_indexes_in_the_collection_causes_an_exception($index)
     {
-        $coolection = new Coolection(['foo', 'bar', 'baz']);
-        $coolection[$index];
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $speedBag[$index];
     }
 
     /**
@@ -157,8 +157,8 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_setting_invalid_indexes_in_the_collection_causes_an_exception($index)
     {
-        $coolection = new Coolection(['foo', 'bar', 'baz']);
-        $coolection[$index] = 'wat';
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $speedBag[$index] = 'wat';
     }
 
     /**
@@ -168,8 +168,8 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_checking_the_existence_of_an_element_at_invalid_indexes_in_the_collection_causes_and_exception($index)
     {
-        $coolection = new Coolection(['foo', 'bar', 'baz']);
-        isset($coolection[$index]);
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        isset($speedBag[$index]);
     }
 
     /**
@@ -179,8 +179,8 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_unsetting_an_element_at_invalid_indexes_in_the_collection_causes_and_exception($index)
     {
-        $coolection = new Coolection(['foo', 'bar', 'baz']);
-        unset($coolection[$index]);
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        unset($speedBag[$index]);
     }
 
     public function invalidIndexProvider()
@@ -200,8 +200,8 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
             [10]
         ];
 
-        $coolection = new Coolection($arrayOfArrays);
-        $flattened = $coolection->flatten();
+        $speedBag = new SpeedBag($arrayOfArrays);
+        $flattened = $speedBag->flatten();
 
         $this->assertCount(10, $flattened);
         $this->assertEquals([1,2, 3, 4, 5, 6, 7, 8, 9, 10], $flattened->toArray());
@@ -220,8 +220,8 @@ class CoolectionTest extends PHPUnit_Framework_TestCase
             return [$elem];
         };
 
-        $coolection = new Coolection($arrayOfArrays);
-        $flattened = $coolection->flatten($dontFlatten);
+        $speedBag = new SpeedBag($arrayOfArrays);
+        $flattened = $speedBag->flatten($dontFlatten);
 
         $this->assertCount(4, $flattened);
         $this->assertEquals($arrayOfArrays, $flattened->toArray());

@@ -1,4 +1,4 @@
-# Coolection
+# Speed Bag
 
 A collection library focused on delivering faster access to and iteration of its members.
 
@@ -8,4 +8,4 @@ Colin DeCarlo, colin@thedecarlos.ca
 
 ## License
 
-Coolection is licensed under the MIT License - see the LICENSE file for details
+Speed Bag is licensed under the MIT License - see the LICENSE file for details
