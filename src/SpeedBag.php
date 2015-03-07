@@ -144,19 +144,7 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function contains($value)
     {
-        $isFound = is_callable($value, true)
-            ? $value
-            : function ($elem) use ($value) {
-                return $elem == $value;
-            };
-
-        for ($i = 0; $i < $this->size; $i++) {
-            if ($isFound($this->elems[$i])) {
-                return true;
-            }
-        }
-
-        return false;
+        return !! $this->first($value);
     }
 
     public function first($matching = null)
