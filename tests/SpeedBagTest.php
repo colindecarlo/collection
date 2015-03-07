@@ -249,4 +249,34 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertCount(10, $flattened);
         $this->assertEquals([1,2, 3, 4, 5, 6, 7, 8, 9, 10], $flattened->toArray());
     }
+
+    public function test_that_the_contains_method_returns_correctly_when_looking_for_scalar_values()
+    {
+        $speedBag = new SpeedBag([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+        $this->assertTrue($speedBag->contains(1));
+        $this->assertTrue($speedBag->contains(5));
+        $this->assertTrue($speedBag->contains(10));
+
+        $this->assertFalse($speedBag->contains(42));
+    }
+
+    public function test_that_the_contains_method_returns_correctly_when_using_a_custom_equality_function()
+    {
+        $speedBag = new SpeedBag([
+            'Lorem ipsum dolor',
+            'sit amet consectetur',
+            'adipiscing elit sed',
+            'do'
+        ]);
+
+        $hasWord = function ($searchWord) {
+            return function ($elem) use ($searchWord) {
+                return !! strstr($elem, $searchWord);
+            };
+        };
+
+        $this->assertTrue($speedBag->contains($hasWord('elit')));
+        $this->assertFalse($speedBag->contains($hasWord('foo')));
+    }
 }
