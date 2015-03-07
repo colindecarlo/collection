@@ -159,6 +159,27 @@ class SpeedBag implements ArrayAccess, Countable
         return false;
     }
 
+    public function first($matching = null)
+    {
+        if (null === $matching) {
+            return $this->elems[0];
+        }
+
+        if (! is_callable($matching)) {
+            $matching = function ($elem) use ($matching) {
+                return $elem == $matching;
+            };
+        }
+
+        for ($i = 0; $i < $this->size; $i++) {
+            if ($matching($this->elems[$i])) {
+                return $this->elems[$i];
+            }
+        }
+
+        return null;
+    }
+
     public function toArray()
     {
         return $this->elems->toArray();
