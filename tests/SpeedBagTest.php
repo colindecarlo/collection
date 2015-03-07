@@ -379,4 +379,21 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull($speedBag->last($matcher));
     }
+
+    /**
+     * @dataProvider reverseProvider
+     */
+    public function test_that_the_reverse_method_returns_a_new_SpeedBag_with_reversed_elements($original, $reversed)
+    {
+        $speedBag = new SpeedBag($original);
+        $this->assertEquals($reversed, $speedBag->reverse()->toArray());
+    }
+
+    public function reverseProvider()
+    {
+        return [
+            [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]],
+            [[1, 2, 3, 4], [ 4, 3, 2, 1]],
+        ];
+    }
 }
