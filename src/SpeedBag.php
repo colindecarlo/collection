@@ -248,6 +248,6 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function count()
     {
-        return count($this->elems);
+        return $this->elems->count();
     }
 }
