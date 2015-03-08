@@ -19,9 +19,12 @@ class SpeedBag implements ArrayAccess, Countable
 {
     protected $elems;
     protected $size;
+    protected $reversed;
 
-    public function __construct($size)
+    public function __construct($size, $reversed = false)
     {
+        $this->reversed = $reversed;
+
         if (is_array($size)) {
             $this->fromArray($size);
             return;
@@ -203,26 +206,27 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function reverse()
     {
-        return new static(array_reverse($this->toArray()));
+        return new static($this->elems, true);
     }
 
     public function toArray()
     {
-        return $this->elems->toArray();
+        $asArray = $this->elems->toArray();
+        return $this->reversed ? array_reverse($asArray) : $asArray;
     }
 
     public function offsetGet($index)
     {
         $this->assertBoundaries($index);
 
-        return $this->elems[$index];
+        return $this->elems[$this->getIndex($index)];
     }
 
     public function offsetSet($index, $value)
     {
         $this->assertBoundaries($index);
 
-        $this->elems[$index] = $value;
+        $this->elems[$this->getIndex($index)] = $value;
     }
 
     public function offsetExists($index)
@@ -236,7 +240,12 @@ class SpeedBag implements ArrayAccess, Countable
     {
         $this->assertBoundaries($index);
 
-        unset($this->elems[$index]);
+        unset($this->elems[$this->getIndex($index)]);
+    }
+
+    protected function getIndex($index)
+    {
+        return $this->reversed ? ($this->size - 1) - $index : $index;
     }
 
     protected function assertBoundaries($index)
