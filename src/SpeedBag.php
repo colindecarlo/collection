@@ -27,6 +27,11 @@ class SpeedBag implements ArrayAccess, Countable
             return;
         }
 
+        if ($size instanceof SplFixedArray) {
+            $this->fromFixedArray($size);
+            return;
+        }
+
         $this->elems = new SplFixedArray($size);
         $this->size = $size;
     }
@@ -34,7 +39,13 @@ class SpeedBag implements ArrayAccess, Countable
     protected function fromArray($array)
     {
         $this->elems = SplFixedArray::fromArray($array, false);
-        $this->size = count($this);
+        $this->size = $this->elems->count();
+    }
+
+    protected function fromFixedArray($fixedArray)
+    {
+        $this->elems = $fixedArray;
+        $this->size = $this->elems->count();
     }
 
     public function map($func)
