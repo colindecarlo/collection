@@ -396,4 +396,27 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             [[1, 2, 3, 4], [ 4, 3, 2, 1]],
         ];
     }
+
+    public function test_that_the_groupBy_method_correctly_groups_elements_of_the_collection()
+    {
+        $speedBag = new SpeedBag([
+            'Lorem', 'ipsum', 'dolor', 'sit', 'amet',
+            'consectetur', 'adipiscing', 'elit', 'sed', 'do'
+        ]);
+
+        $grouped = $speedBag->groupBy(function ($elem) {
+            return strlen($elem);
+        });
+
+        $expected = [
+            ['Lorem', 'ipsum', 'dolor'],
+            ['sit', 'sed'],
+            ['amet', 'elit'],
+            ['consectetur'],
+            ['adipiscing'],
+            ['do']
+        ];
+
+        $this->assertEquals($expected, $grouped->toArray());
+    }
 }

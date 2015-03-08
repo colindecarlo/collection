@@ -206,6 +206,15 @@ class SpeedBag implements ArrayAccess, Countable
         return new static(array_reverse($this->toArray()));
     }
 
+    public function groupBy($getGroupKey)
+    {
+        $grouped = $this->reduce(function ($grouped, $elem) use ($getGroupKey) {
+            $grouped[$getGroupKey($elem)][] = $elem;
+            return $grouped;
+        }, []);
+        return new static($grouped);
+    }
+
     public function toArray()
     {
         return $this->elems->toArray();
