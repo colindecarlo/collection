@@ -442,7 +442,6 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException OutOfBoundsException
      * @expectedExceptionMessage Invalid index
-     * @dataProvider invalidIndexProvider
      */
     public function test_that_the_appending_to_a_full_SpeedBag_causes_an_out_of_bounds_exception()
     {
