@@ -32,6 +32,15 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertCount(0, $speedBag);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid argument supplied to SpeedBag::__construct
+     */
+    public function test_that_an_excpetion_is_thrown_when_instantiating_a_SpeedBag_with_an_invalid_argument()
+    {
+        new SpeedBag('foo');
+    }
+
     public function test_that_the_each_method_visits_every_element_of_the_collection()
     {
         $speedBag = new SpeedBag([
