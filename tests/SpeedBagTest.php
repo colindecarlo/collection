@@ -397,6 +397,29 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    public function test_that_the_append_method_adds_an_element_to_the_end_of_the_collection()
+    {
+        $speedBag = new SpeedBag(1);
+
+        $this->assertCount(0, $speedBag);
+
+        $speedBag->append('foo');
+
+        $this->assertCount(1, $speedBag);
+        $this->assertEquals('foo', $speedBag[0]);
+    }
+
+    /**
+     * @expectedException OutOfBoundsException
+     * @expectedExceptionMessage Invalid index
+     * @dataProvider invalidIndexProvider
+     */
+    public function test_that_the_appending_to_a_full_SpeedBag_causes_an_out_of_bounds_exception()
+    {
+        $speedBag = new SpeedBag(['foo']);
+        $speedBag->append('bar');
+    }
+
     public function test_that_the_groupBy_method_correctly_groups_elements_of_the_collection()
     {
         $speedBag = new SpeedBag([

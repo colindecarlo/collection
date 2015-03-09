@@ -18,39 +18,54 @@ use InvalidArgumentException;
 class SpeedBag implements ArrayAccess, Countable
 {
     protected $elems;
+    protected $capacity;
     protected $size;
 
-    public function __construct($size)
+    public function __construct($capacity)
     {
-        if (is_array($size)) {
-            $this->fromArray($size);
+        if (is_array($capacity)) {
+            $this->fromArray($capacity);
             return;
         }
 
-        if ($size instanceof SplFixedArray) {
-            $this->fromFixedArray($size);
+        if ($capacity instanceof SplFixedArray) {
+            $this->fromFixedArray($capacity);
             return;
         }
 
-        $this->elems = new SplFixedArray($size);
-        $this->size = $size;
+        $this->elems = new SplFixedArray($capacity);
+        $this->capacity = $capacity;
+        $this->size = 0;
     }
 
     protected function fromArray($array)
     {
         $this->elems = SplFixedArray::fromArray($array, false);
-        $this->size = $this->elems->count();
+        $this->capacity = $this->elems->count();
+        $this->size = $this->lastNonNullIndex();
     }
 
     protected function fromFixedArray($fixedArray)
     {
         $this->elems = $fixedArray;
-        $this->size = $this->elems->count();
+        $this->capcity = $this->elems->count();
+        $this->size = $this->lastNonNullIndex();
+    }
+
+    protected function lastNonNullIndex()
+    {
+        for ($i = $this->capacity - 1; $i >= 0; $i--) {
+            if ($this->elems[$i]) {
+                break;
+            }
+        }
+
+        return $i >= 0 ? $i+1 : 0;
     }
 
     public function map($func)
     {
-        $mapped = new static($this->size);
+        $mapped = new static($this->capacity);
         for ($i = 0; $i < $this->size; $i++) {
             $mapped[$i] = $func($this->elems[$i]);
         }
@@ -94,18 +109,18 @@ class SpeedBag implements ArrayAccess, Countable
     public function slice($offset, $length = null)
     {
         if ($offset < 0) {
-            $offset = $this->size + $offset;
+            $offset = $this->capacity + $offset;
         }
 
         if ($length === null) {
-            $length = $this->size - $offset;
+            $length = $this->capacity - $offset;
         }
 
         if ($length < 0) {
-            $length = $this->size - $offset + $length;
+            $length = $this->capacity - $offset + $length;
         }
 
-        $length = $offset + $length < $this->size ? $length : $this->size - $offset;
+        $length = $offset + $length < $this->capacity ? $length : $this->size - $offset;
 
         if ($length < 0) {
             throw new InvalidArgumentException(
@@ -211,13 +226,16 @@ class SpeedBag implements ArrayAccess, Countable
         $grouped = $this->reduce(function ($grouped, $elem) use ($getGroupKey) {
             $grouped[$getGroupKey($elem)][] = $elem;
             return $grouped;
-        }, []);
-        return new static($grouped);
+        }, new static($this->capacity));
+    }
+
+    public function append($elem) {
+        $this->offsetSet($this->size, $elem);
     }
 
     public function toArray()
     {
-        return $this->elems->toArray();
+        return array_filter($this->elems->toArray());
     }
 
     public function offsetGet($index)
@@ -232,13 +250,14 @@ class SpeedBag implements ArrayAccess, Countable
         $this->assertBoundaries($index);
 
         $this->elems[$index] = $value;
+        $this->size = $index >= $this->size ? $index + 1 : $this->size;
     }
 
     public function offsetExists($index)
     {
         $this->assertBoundaries($index);
 
-        return $index < $this->size;
+        return true;
     }
 
     public function offsetUnset($index)
@@ -250,13 +269,13 @@ class SpeedBag implements ArrayAccess, Countable
 
     protected function assertBoundaries($index)
     {
-        if ($index < 0 || $index >= $this->size) {
+        if ($index < 0 || $index >= $this->capacity) {
             throw new OutOfBoundsException('Invalid index ' . $index);
         }
     }
 
     public function count()
     {
-        return $this->elems->count();
+        return $this->size;
     }
 }
