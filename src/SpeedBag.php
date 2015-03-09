@@ -23,33 +23,28 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function __construct($capacity)
     {
-        if (is_array($capacity)) {
-            $this->fromArray($capacity);
-            return;
-        }
-
-        if ($capacity instanceof SplFixedArray) {
-            $this->fromFixedArray($capacity);
-            return;
-        }
-
-        $this->elems = new SplFixedArray($capacity);
-        $this->capacity = $capacity;
-        $this->size = 0;
-    }
-
-    protected function fromArray($array)
-    {
-        $this->elems = SplFixedArray::fromArray($array, false);
+        $this->elems = $this->buildElems($capacity);
         $this->capacity = $this->elems->count();
         $this->size = $this->lastNonNullIndex();
     }
 
-    protected function fromFixedArray($fixedArray)
+    protected function buildElems($arg)
     {
-        $this->elems = $fixedArray;
-        $this->capcity = $this->elems->count();
-        $this->size = $this->lastNonNullIndex();
+        if (is_numeric($arg)) {
+            return new SplFixedArray($arg);
+        }
+
+        if (is_array($arg)) {
+            return SplFixedArray::fromArray($arg, false);
+        }
+
+        if ($arg instanceof SplFixedArray) {
+            return $arg;
+        }
+
+        throw new InvalidArgumentException(
+            'Invalid argument supplied to SpeedBag::__construct. (required: numeric|array|SplFixedArray)'
+        );
     }
 
     protected function lastNonNullIndex()

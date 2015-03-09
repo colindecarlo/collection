@@ -11,6 +11,27 @@ use SpeedBag\SpeedBag;
 
 class SpeedBagTest extends PHPUnit_Framework_TestCase
 {
+    public function test_that_a_SpeedBag_can_be_constructed_using_a_numeric_argument()
+    {
+        $speedBag = new SpeedBag(10);
+        $this->assertInstanceOf('SpeedBag\\SpeedBag', $speedBag);
+        $this->assertCount(0, $speedBag);
+    }
+
+    public function test_that_a_SpeedBag_can_be_constructed_using_an_array_argument()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $this->assertInstanceOf('SpeedBag\\SpeedBag', $speedBag);
+        $this->assertCount(3, $speedBag);
+    }
+
+    public function test_that_a_SpeedBag_can_be_constructed_using_an_SplFixedArray_argument()
+    {
+        $speedBag = new SpeedBag(new SplFixedArray(10));
+        $this->assertInstanceOf('SpeedBag\\SpeedBag', $speedBag);
+        $this->assertCount(0, $speedBag);
+    }
+
     public function test_that_the_each_method_visits_every_element_of_the_collection()
     {
         $speedBag = new SpeedBag([
