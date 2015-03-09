@@ -233,6 +233,15 @@ class SpeedBag implements ArrayAccess, Countable
         $this->offsetSet($this->size, $elem);
     }
 
+    public function push($elem) {
+        $this->append($elem);
+    }
+
+    public function pop()
+    {
+        return $this->size > 0 ? $this->elems[--$this->size] : null;
+    }
+
     public function toArray()
     {
         return array_filter($this->elems->toArray());

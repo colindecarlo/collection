@@ -475,4 +475,43 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($expected[$i], $grouped[$i]->toArray());
         }
     }
+
+    public function test_that_the_pop_method_removes_and_returns_the_last_element_of_the_collection()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+
+        $this->assertCount(3, $speedBag);
+        $this->assertEquals('baz', $speedBag->pop());
+        $this->assertCount(2, $speedBag);
+    }
+
+    public function test_that_the_pop_method_returns_null_when_the_collection_is_empty()
+    {
+        $speedBag = new SpeedBag(1);
+
+        $this->assertCount(0, $speedBag);
+        $this->assertNull($speedBag->pop());
+    }
+
+    public function test_that_the_push_method_adds_an_element_to_the_end_of_the_collection()
+    {
+        $speedBag = new SpeedBag(1);
+
+        $this->assertCount(0, $speedBag);
+
+        $speedBag->push('foo');
+
+        $this->assertCount(1, $speedBag);
+        $this->assertEquals('foo', $speedBag[0]);
+    }
+
+    /**
+     * @expectedException OutOfBoundsException
+     * @expectedExceptionMessage Invalid index
+     */
+    public function test_that_pushing_onto_a_full_SpeedBag_causes_an_out_of_bounds_exception()
+    {
+        $speedBag = new SpeedBag(['foo']);
+        $speedBag->push('bar');
+    }
 }
