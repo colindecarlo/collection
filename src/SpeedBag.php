@@ -223,8 +223,19 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function groupBy($getGroupKey)
     {
-        $grouped = $this->reduce(function ($grouped, $elem) use ($getGroupKey) {
-            $grouped[$getGroupKey($elem)][] = $elem;
+        $findByKey = function ($key) use ($getGroupKey) {
+            return function ($elem) use ($key, $getGroupKey) {
+                return $key == $getGroupKey($elem[0]);
+            };
+        };
+
+        return $this->reduce(function ($grouped, $elem) use ($getGroupKey, $findByKey) {
+            $key = $getGroupKey($elem);
+            if (null === ($group = $grouped->first($findByKey($key)))) {
+                $group = new static($this->capacity);
+                $grouped->append($group);
+            }
+            $group->append($elem);
             return $grouped;
         }, new static($this->capacity));
     }

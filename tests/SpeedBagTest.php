@@ -440,6 +440,9 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             ['do']
         ];
 
-        $this->assertEquals($expected, $grouped->toArray());
+        $this->assertCount(6, $grouped);
+        for ($i = 0; $i < 6; $i++) {
+            $this->assertEquals($expected[$i], $grouped[$i]->toArray());
+        }
     }
 }
