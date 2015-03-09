@@ -481,7 +481,9 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $speedBag);
         $this->assertEquals('baz', $speedBag->pop());
+
         $this->assertCount(2, $speedBag);
+        $this->assertNull($speedBag[2]);
     }
 
     public function test_that_the_pop_method_returns_null_when_the_collection_is_empty()

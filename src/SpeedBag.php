@@ -239,7 +239,14 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function pop()
     {
-        return $this->size > 0 ? $this->elems[--$this->size] : null;
+        if ($this->size == 0) {
+            return null;
+        }
+
+        $elem = $this->elems[--$this->size];
+        $this->elems[$this->size] = null;
+
+        return $elem;
     }
 
     public function toArray()
