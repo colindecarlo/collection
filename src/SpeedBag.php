@@ -229,11 +229,21 @@ class SpeedBag implements ArrayAccess, Countable
         }, new static(count($groups)));
     }
 
-    public function append($elem) {
+    public function prepend($elem)
+    {
+        for ($i = $this->size - 1; $i >= 0; $i--) {
+            $this->offsetSet($i+1, $this->elems[$i]);
+        }
+        $this->elems[0] = $elem;
+    }
+
+    public function append($elem)
+    {
         $this->offsetSet($this->size, $elem);
     }
 
-    public function push($elem) {
+    public function push($elem)
+    {
         $this->append($elem);
     }
 

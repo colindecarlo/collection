@@ -525,4 +525,19 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertCount(3, $speedBag);
         $this->assertEquals('baz', $speedBag[2]);
     }
+
+    public function test_that_the_prepend_method_adds_the_element_to_the_start_of_the_collection()
+    {
+        $speedBag = new SpeedBag(['bar']);
+
+        $this->assertCount(1, $speedBag);
+        $this->assertEquals('bar', $speedBag[0]);
+
+        $speedBag->prepend('foo');
+
+        $this->assertCount(2, $speedBag);
+        $this->assertEquals('foo', $speedBag[0]);
+        $this->assertEquals('bar', $speedBag[1]);
+    }
+
 }
