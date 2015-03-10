@@ -2,6 +2,7 @@
 
 namespace SpeedBag;
 
+use Iterator;
 use Countable;
 use ArrayAccess;
 use SplFixedArray;
@@ -15,11 +16,13 @@ use InvalidArgumentException;
  * file that was distributed with this source code.
 */
 
-class SpeedBag implements ArrayAccess, Countable
+class SpeedBag implements ArrayAccess, Countable, Iterator
 {
     protected $elems;
     protected $capacity;
     protected $size;
+
+    protected $iteratorPosition = 0;
 
     public function __construct($capacity)
     {
@@ -310,5 +313,30 @@ class SpeedBag implements ArrayAccess, Countable
     public function count()
     {
         return $this->size;
+    }
+
+    public function rewind()
+    {
+        $this->iteratorPosition = 0;
+    }
+
+    public function current()
+    {
+        return $this->offsetGet($this->iteratorPosition);
+    }
+
+    public function key()
+    {
+        return $this->iteratorPosition;
+    }
+
+    public function next()
+    {
+        $this->iteratorPosition++;
+    }
+
+    public function valid()
+    {
+        return $this->iteratorPosition < $this->size;
     }
 }

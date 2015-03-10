@@ -540,4 +540,15 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $speedBag[1]);
     }
 
+    public function test_that_a_SpeedBag_is_iterable()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz', null, null]);
+
+        $elems = [];
+        foreach ($speedBag as $index => $elem) {
+            $elems[$index] = $elem;
+        }
+
+        $this->assertEquals($elems, $speedBag->toArray());
+    }
 }
