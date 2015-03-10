@@ -263,6 +263,13 @@ class SpeedBag implements ArrayAccess, Countable
 
     public function offsetSet($index, $value)
     {
+        if ($index >= $this->capacity) {
+            do {
+                $this->capacity = floor(1.5 * $this->capacity) + 1;
+            } while ($index >= $this->capacity);
+            $this->elems->setSize($this->capacity);
+        }
+
         $this->assertBoundaries($index);
 
         $this->elems[$index] = $value;

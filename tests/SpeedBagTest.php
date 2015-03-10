@@ -183,12 +183,11 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException OutOfBoundsException
      * @expectedExceptionMessage Invalid index
-     * @dataProvider invalidIndexProvider
      */
-    public function test_that_setting_invalid_indexes_in_the_collection_causes_an_exception($index)
+    public function test_that_setting_invalid_indexes_in_the_collection_causes_an_exception()
     {
         $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag[$index] = 'wat';
+        $speedBag[-1] = 'wat';
     }
 
     /**
@@ -439,14 +438,15 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $speedBag[0]);
     }
 
-    /**
-     * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage Invalid index
-     */
-    public function test_that_the_appending_to_a_full_SpeedBag_causes_an_out_of_bounds_exception()
+    public function test_that_the_appending_to_a_full_SpeedBag_causes_the_collection_to_grow()
     {
         $speedBag = new SpeedBag(['foo']);
+
+        $this->assertCount(1, $speedBag);
+
         $speedBag->append('bar');
+
+        $this->assertCount(2, $speedBag);
     }
 
     public function test_that_the_groupBy_method_correctly_groups_elements_of_the_collection()
@@ -506,13 +506,23 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $speedBag[0]);
     }
 
-    /**
-     * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage Invalid index
-     */
-    public function test_that_pushing_onto_a_full_SpeedBag_causes_an_out_of_bounds_exception()
+    public function test_that_pushing_onto_a_full_SpeedBag_causes_the_collection_to_grow()
     {
         $speedBag = new SpeedBag(['foo']);
+
+        $this->assertCount(1, $speedBag);
+
         $speedBag->push('bar');
+
+        $this->assertCount(2, $speedBag);
+    }
+
+    public function test_that_adding_an_element_past_the_end_of_the_collection_grows_the_collection_to_accomodate_the_element()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar']);
+        $speedBag->append('baz');
+
+        $this->assertCount(3, $speedBag);
+        $this->assertEquals('baz', $speedBag[2]);
     }
 }
