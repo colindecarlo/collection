@@ -336,7 +336,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
         $split = explode(',', $take);
 
         if (count($split) !== 2) {
-            throw new InvalidArgumentException('Invalid slice range: ' . $take);
+            throw new InvalidArgumentException('Invalid take notation: ' . $take);
         }
 
         $offset = trim($split[0]);
@@ -346,7 +346,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
             return [$offset, $length];
         }
 
-        throw new InvalidArgumentException('Invalid slice range: ' . $take);
+        throw new InvalidArgumentException('Invalid take notation: ' . $take);
     }
 
     protected function getElementAt($index)

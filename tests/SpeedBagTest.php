@@ -581,6 +581,44 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid slice range
+     * @dataProvider invalidSliceIndexProvider
+     */
+    public function test_that_an_exception_is_thrown_when_indexing_with_invalid_slice_notation($index)
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $speedBag[$index];
+    }
+
+    public function invalidSliceIndexProvider()
+    {
+        return [
+            ['foo:1'],
+            ['1:foo']
+        ];
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid take notation
+     * @dataProvider invalidTakeIndexProvider
+     */
+    public function test_that_an_exception_is_thrown_when_indexing_with_invalid_take_notation($index)
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $speedBag[$index];
+    }
+
+    public function invalidTakeIndexProvider()
+    {
+        return [
+            [','],
+            ['1,2,3']
+        ];
+    }
+
     public function test_that_indexes_containing_false_are_considered_populated()
     {
         $speedBag = new SpeedBag([true, false, null]);
