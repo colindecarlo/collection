@@ -5,6 +5,7 @@ namespace SpeedBag;
 use Iterator;
 use Countable;
 use ArrayAccess;
+use Traversable;
 use SplFixedArray;
 use OutOfBoundsException;
 use InvalidArgumentException;
