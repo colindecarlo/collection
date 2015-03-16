@@ -360,16 +360,21 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
     public function offsetSet($index, $value)
     {
         if ($index >= $this->capacity) {
-            do {
-                $this->capacity = floor(1.5 * $this->capacity) + 1;
-            } while ($index >= $this->capacity);
-            $this->elems->setSize($this->capacity);
+            $this->expandToFit($index);
         }
 
         $this->assertBoundaries($index);
 
         $this->elems[$index] = $value;
         $this->size = $index >= $this->size ? $index + 1 : $this->size;
+    }
+
+    protected function expandToFit($requiredCapacity)
+    {
+        do {
+            $this->capacity = floor(1.5 * $this->capacity) + 1;
+        } while ($requiredCapacity >= $this->capacity);
+        $this->elems->setSize($this->capacity);
     }
 
     public function offsetExists($index)
