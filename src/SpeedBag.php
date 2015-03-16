@@ -279,7 +279,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
             return $this->slice($offset, $length);
         }
 
-        throw new IndexOutOfBoundsException('Unknown or invalid index: ' . $index);
+        throw new InvalidArgumentException('Unknown or invalid index: ' . $index);
     }
 
     protected function isSlice($index)
