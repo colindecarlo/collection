@@ -352,7 +352,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
 
     protected function getElementAt($index)
     {
-        $this->assertBoundaries($index);
+        $this->assertValidIndex($index);
 
         return $this->elems[$index];
     }
@@ -363,7 +363,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
             $this->expandToFit($index);
         }
 
-        $this->assertBoundaries($index);
+        $this->assertValidIndex($index);
 
         $this->elems[$index] = $value;
         $this->size = $index >= $this->size ? $index + 1 : $this->size;
@@ -379,22 +379,26 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
 
     public function offsetExists($index)
     {
-        $this->assertBoundaries($index);
+        $this->assertValidIndex($index);
 
         return true;
     }
 
     public function offsetUnset($index)
     {
-        $this->assertBoundaries($index);
+        $this->assertValidIndex($index);
 
         unset($this->elems[$index]);
     }
 
-    protected function assertBoundaries($index)
+    protected function assertValidIndex($index)
     {
+        if (! is_int($index)) {
+            throw new InvalidArgumentException('Invalid index ' . $index);
+        }
+
         if ($index < 0 || $index >= $this->capacity) {
-            throw new OutOfBoundsException('Invalid index ' . $index);
+            throw new OutOfBoundsException('Unknown or invalid index ' . $index);
         }
     }
 

@@ -171,7 +171,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage Invalid index
+     * @expectedExceptionMessage Unknown or invalid index
      * @dataProvider invalidIndexProvider
      */
     public function test_that_accessing_invalid_indexes_in_the_collection_causes_an_exception($index)
@@ -182,7 +182,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage Invalid index
+     * @expectedExceptionMessage Unknown or invalid index
      */
     public function test_that_setting_invalid_indexes_in_the_collection_causes_an_exception()
     {
@@ -192,7 +192,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage Invalid index
+     * @expectedExceptionMessage Unknown or invalid index
      * @dataProvider invalidIndexProvider
      */
     public function test_that_checking_the_existence_of_an_element_at_invalid_indexes_in_the_collection_causes_and_exception($index)
@@ -203,7 +203,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException OutOfBoundsException
-     * @expectedExceptionMessage Invalid index
+     * @expectedExceptionMessage Unknown or invalid index
      * @dataProvider invalidIndexProvider
      */
     public function test_that_unsetting_an_element_at_invalid_indexes_in_the_collection_causes_and_exception($index)
@@ -216,8 +216,48 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
     {
         return [
             [-1],
-            [3]
+            [3],
         ];
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Unknown or invalid index
+     */
+    public function test_that_accessing_an_element_at_a_invalid_string_index_throws_an_exception()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $speedBag['foo'];
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid index
+     */
+    public function test_that_setting_an_element_at_a_invalid_string_index_throws_an_exception()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $speedBag['foo'] = 'bar';
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid index
+     */
+    public function test_that_unsetting_an_element_at_a_invalid_string_index_throws_an_exception()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        unset($speedBag['foo']);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid index
+     */
+    public function test_that_checking_the_existence_of_an_element_at_a_invalid_string_index_throws_an_exception()
+    {
+        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        isset($speedBag['foo']);
     }
 
     public function test_that_flattening_a_collection_using_the_default_flatten_function_flattens_a_two_dimensional_array()
