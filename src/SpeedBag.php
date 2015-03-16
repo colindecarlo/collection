@@ -134,6 +134,11 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
         return $sliced;
     }
 
+    public function slice_native($offset, $length = null)
+    {
+        return new SpeedBag(array_slice($this->elems->toArray(), $offset, $length, false));
+    }
+
     public function flatten($flattenWith = null)
     {
         $flattenWith = $flattenWith ?: function ($elem) {
