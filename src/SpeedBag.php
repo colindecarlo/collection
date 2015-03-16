@@ -160,7 +160,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
 
         $index = 0;
         return $mapped->reduce(function ($flattened, $elem) use (&$index) {
-            for ($i = 0; $i < count($elem); $i++) {
+            for ($i = 0, $elemSize = count($elem); $i < $elemSize; $i++) {
                 $flattened[$index++] = $elem[$i];
             }
             return $flattened;
