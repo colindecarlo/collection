@@ -53,7 +53,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
     protected function lastNonNullIndex()
     {
         for ($i = $this->capacity - 1; $i >= 0; $i--) {
-            if ($this->elems[$i]) {
+            if ($this->elems[$i] !== null) {
                 break;
             }
         }

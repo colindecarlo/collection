@@ -551,4 +551,11 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($elems, $speedBag->toArray());
     }
+
+    public function test_that_indexes_containing_false_are_considered_populated()
+    {
+        $speedBag = new SpeedBag([true, false, null]);
+
+        $this->assertCount(2, $speedBag);
+    }
 }
