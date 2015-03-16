@@ -96,7 +96,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
         $func = $func ?: $identity;
 
         $filtered = [];
-        for ($i = 0, $k = 0; $i < $this->size; $i++) {
+        for ($i = 0; $i < $this->size; $i++) {
             if (! $func($this->elems[$i])) {
                 continue;
             }
