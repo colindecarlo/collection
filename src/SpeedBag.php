@@ -269,6 +269,88 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
 
     public function offsetGet($index)
     {
+        if (is_int($index)) {
+            return $this->getElementAt($index);
+        }
+
+        if ($this->isSlice($index)) {
+            list($offset, $length) = $this->getSliceOffsetAndLength($index);
+            return $this->slice($offset, $length);
+        }
+
+        throw new IndexOutOfBoundsException('Unknown or invalid index: ' . $index);
+    }
+
+    protected function isSlice($index)
+    {
+        if (strpos($index, ':') !== false) {
+            return true;
+        }
+
+        if (strpos($index, ',') !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getSliceOffsetAndLength($slice)
+    {
+        return strpos($slice, ':') !== false
+            ? $this->getSliceOffsetAndLengthByRange($slice)
+            : $this->getSliceOffsetAndLengthByTake($slice);
+    }
+
+    protected function getSliceOffsetAndLengthByRange($range)
+    {
+        $split = explode(':', $range, 2);
+
+        $start = trim($split[0]) ?: 0;
+        $end = trim($split[1]) ?: null;
+
+        if ($this->isInvalidRange($start, $end)) {
+            throw new InvalidArgumentException('Invalid slice range: ' . $range);
+        }
+
+        if (is_int($end)) {
+            $end = $end < 0 ? $end : $end - ($this->size - 1);
+        }
+
+        return [$start, $end];
+    }
+
+    protected function isInvalidRange($start, $end) {
+        if (! is_int($start)) {
+            return true;
+        }
+
+        if (! is_int($end) && $end !== null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getSliceOffsetAndLengthByTake($take)
+    {
+        $split = explode(',', $take);
+
+        if (count($split) !== 2) {
+            throw new InvalidArgumentException('Invalid slice range: ' . $take);
+        }
+
+        $offset = trim($split[0]);
+        $length = trim($split[1]);
+
+        if (is_int($offset) && is_int($length) && $offset > 0 && $length > 0) {
+            return [$offset, $length];
+        }
+
+        throw new InvalidArgumentException('Invalid slice range: ' . $take);
+    }
+
+    protected function getElementAt($index)
+    {
         $this->assertBoundaries($index);
 
         return $this->elems[$index];
@@ -339,4 +421,11 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
     {
         return $this->iteratorPosition < $this->size;
     }
+}
+
+/**
+ * As far as I'm concerned, if it looks like an integer, it is.
+ */
+function is_int($int) {
+    return (string)(int)$int === (string)$int;
 }

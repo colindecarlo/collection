@@ -552,6 +552,35 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($elems, $speedBag->toArray());
     }
 
+    /**
+     * @dataProvider arrayIndexSliceProvider
+     */
+    public function test_that_slices_can_be_taken_using_array_indexing($index, $expected)
+    {
+        $speedBag = new SpeedBag([
+            'Lorem', 'ipsum', 'dolor', 'sit', 'amet',
+            'consectetur', 'adipiscing', 'elit', 'sed', 'do'
+        ]);
+
+        $this->assertEquals($expected, $speedBag[$index]->toArray());
+    }
+
+    public function arrayIndexSliceProvider()
+    {
+        return [
+            ['1:3', ['ipsum', 'dolor', 'sit']],
+            [':2', ['Lorem', 'ipsum', 'dolor']],
+            [':-6', ['Lorem', 'ipsum', 'dolor', 'sit']],
+            ['7:', ['elit', 'sed', 'do']],
+            ['-3:', ['elit', 'sed', 'do']],
+            [':-6', ['Lorem', 'ipsum', 'dolor', 'sit']],
+            ['-3:8', ['elit', 'sed']],
+            ['-5:-1', ['consectetur', 'adipiscing', 'elit', 'sed']],
+            ['7:-1', ['elit', 'sed']],
+            ['5,3', ['consectetur', 'adipiscing', 'elit']],
+        ];
+    }
+
     public function test_that_indexes_containing_false_are_considered_populated()
     {
         $speedBag = new SpeedBag([true, false, null]);
