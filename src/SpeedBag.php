@@ -127,7 +127,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
             );
         }
 
-        $sliced = new SplFixedArray($length);
+        $sliced = new static($length);
         for ($i = 0; $i < $length; $i++) {
             $sliced[$i] = $this->elems[$offset + $i];
         }
