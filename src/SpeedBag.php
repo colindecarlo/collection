@@ -152,19 +152,12 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
             return [$elem];
         };
 
-        $mapped = $this->map($flattenWith);
-
-        $totalElements = $mapped->reduce(function ($sum, $elem) {
-            return $sum + count($elem);
-        }, 0);
-
-        $index = 0;
-        return $mapped->reduce(function ($flattened, $elem) use (&$index) {
+        return $this->map($flattenWith)->reduce(function ($flattened, $elem) {
             for ($i = 0, $elemSize = count($elem); $i < $elemSize; $i++) {
-                $flattened[$index++] = $elem[$i];
+                $flattened->append($elem[$i]);
             }
             return $flattened;
-        }, new static($totalElements));
+        }, new static($this->size));
     }
 
     public function contains($value)
