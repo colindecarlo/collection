@@ -1,6 +1,6 @@
 <?php
 
-namespace SpeedBag;
+namespace ColinDeCarlo\Collection;
 
 use Iterator;
 use Countable;
@@ -17,7 +17,7 @@ use InvalidArgumentException;
  * file that was distributed with this source code.
 */
 
-class SpeedBag implements ArrayAccess, Countable, Iterator
+class Collection implements ArrayAccess, Countable, Iterator
 {
     protected $elems;
     protected $capacity;
@@ -47,7 +47,7 @@ class SpeedBag implements ArrayAccess, Countable, Iterator
         }
 
         throw new InvalidArgumentException(
-            'Invalid argument supplied to SpeedBag::__construct. (required: numeric|array|SplFixedArray)'
+            'Invalid argument supplied to ColinDeCarlo\Collection\Collection::__construct. (required: numeric|array|SplFixedArray)'
         );
     }
 

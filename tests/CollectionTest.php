@@ -7,43 +7,46 @@
  * file that was distributed with this source code.
 */
 
-use SpeedBag\SpeedBag;
+namespace ColinDeCarlo\Collection;
 
-class SpeedBagTest extends PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+use SplFixedArray;
+
+class CollectionTest extends PHPUnit_Framework_TestCase
 {
-    public function test_that_a_SpeedBag_can_be_constructed_using_a_numeric_argument()
+    public function test_that_a_Collection_can_be_constructed_using_a_numeric_argument()
     {
-        $speedBag = new SpeedBag(10);
-        $this->assertInstanceOf('SpeedBag\\SpeedBag', $speedBag);
-        $this->assertCount(0, $speedBag);
+        $collection = new Collection(10);
+        $this->assertInstanceOf('ColinDeCarlo\\Collection\\Collection', $collection);
+        $this->assertCount(0, $collection);
     }
 
-    public function test_that_a_SpeedBag_can_be_constructed_using_an_array_argument()
+    public function test_that_a_Collection_can_be_constructed_using_an_array_argument()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $this->assertInstanceOf('SpeedBag\\SpeedBag', $speedBag);
-        $this->assertCount(3, $speedBag);
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $this->assertInstanceOf('ColinDeCarlo\\Collection\\Collection', $collection);
+        $this->assertCount(3, $collection);
     }
 
-    public function test_that_a_SpeedBag_can_be_constructed_using_an_SplFixedArray_argument()
+    public function test_that_a_Collection_can_be_constructed_using_an_SplFixedArray_argument()
     {
-        $speedBag = new SpeedBag(new SplFixedArray(10));
-        $this->assertInstanceOf('SpeedBag\\SpeedBag', $speedBag);
-        $this->assertCount(0, $speedBag);
+        $collection = new Collection(new SplFixedArray(10));
+        $this->assertInstanceOf('ColinDeCarlo\\Collection\\Collection', $collection);
+        $this->assertCount(0, $collection);
     }
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid argument supplied to SpeedBag::__construct
+     * @expectedExceptionMessage Invalid argument supplied to ColinDeCarlo\Collection\Collection::__construct
      */
-    public function test_that_an_excpetion_is_thrown_when_instantiating_a_SpeedBag_with_an_invalid_argument()
+    public function test_that_an_excpetion_is_thrown_when_instantiating_a_Collection_with_an_invalid_argument()
     {
-        new SpeedBag('foo');
+        new Collection('foo');
     }
 
     public function test_that_the_each_method_visits_every_element_of_the_collection()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             (object)['value' => true],
             (object)['value' => true],
             (object)['value' => true]
@@ -53,23 +56,23 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             $elem->value = ! $elem->value;
         };
 
-        $speedBag->each($negate);
+        $collection->each($negate);
 
-        $this->assertFalse($speedBag[0]->value);
-        $this->assertFalse($speedBag[1]->value);
-        $this->assertFalse($speedBag[2]->value);
+        $this->assertFalse($collection[0]->value);
+        $this->assertFalse($collection[1]->value);
+        $this->assertFalse($collection[2]->value);
     }
 
-    public function test_that_the_map_method_returns_a_new_SpeedBag_of_mapped_elements()
+    public function test_that_the_map_method_returns_a_new_Collection_of_mapped_elements()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $mapped = $speedBag->map('strtoupper');
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $mapped = $collection->map('strtoupper');
 
-        $this->assertNotSame($speedBag, $mapped);
+        $this->assertNotSame($collection, $mapped);
 
-        $this->assertEquals('foo', $speedBag[0]);
-        $this->assertEquals('bar', $speedBag[1]);
-        $this->assertEquals('baz', $speedBag[2]);
+        $this->assertEquals('foo', $collection[0]);
+        $this->assertEquals('bar', $collection[1]);
+        $this->assertEquals('baz', $collection[2]);
 
         $this->assertEquals('FOO', $mapped[0]);
         $this->assertEquals('BAR', $mapped[1]);
@@ -78,9 +81,9 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_reduce_method_returns_a_reduced_value_of_the_collection()
     {
-        $speedBag = new SpeedBag([1, 2, 3]);
+        $collection = new Collection([1, 2, 3]);
 
-        $total = $speedBag->reduce(function ($sum, $num) {
+        $total = $collection->reduce(function ($sum, $num) {
             return $sum + $num;
         }, 0);
 
@@ -89,13 +92,13 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_filter_method_removes_expected_elements_from_the_collection()
     {
-        $speedBag = new SpeedBag([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $collection = new Collection([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        $odds = $speedBag->filter(function ($elem) {
+        $odds = $collection->filter(function ($elem) {
             return $elem % 2;
         });
 
-        $this->assertNotSame($speedBag, $odds);
+        $this->assertNotSame($collection, $odds);
 
         $this->assertCount(5, $odds);
 
@@ -108,7 +111,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_filter_method_removes_falsey_elements_from_the_collection_by_default()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             false,
             0,
             0.0,
@@ -118,7 +121,7 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             null
         ]);
 
-        $shouldBeEmpty = $speedBag->filter();
+        $shouldBeEmpty = $collection->filter();
 
         $this->assertCount(0, $shouldBeEmpty);
     }
@@ -128,14 +131,14 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_the_slice_method_returns_the_expected_portion_of_the_collection($offset, $length, $expected)
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'lorem', 'ipsum', 'dolor', 'sit', 'amet',
             'consectetur', 'adipiscing', 'elit', 'sed', 'do'
         ]);
 
-        $slice = $speedBag->slice($offset, $length);
+        $slice = $collection->slice($offset, $length);
 
-        $this->assertNotSame($speedBag, $slice);
+        $this->assertNotSame($collection, $slice);
 
         $this->assertEquals($expected, $slice->toArray());
     }
@@ -161,12 +164,12 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_the_slice_method_throws_an_exception_when_the_resulting_slice_would_contain_less_than_zero_elements()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'lorem', 'ipsum', 'dolor', 'sit', 'amet',
             'consectetur', 'adipiscing', 'elit', 'sed', 'do'
         ]);
 
-        $speedBag->slice(9, -2);
+        $collection->slice(9, -2);
     }
 
     /**
@@ -176,8 +179,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_accessing_invalid_indexes_in_the_collection_causes_an_exception($index)
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag[$index];
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $collection[$index];
     }
 
     /**
@@ -186,8 +189,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_setting_invalid_indexes_in_the_collection_causes_an_exception()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag[-1] = 'wat';
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $collection[-1] = 'wat';
     }
 
     /**
@@ -197,8 +200,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_checking_the_existence_of_an_element_at_invalid_indexes_in_the_collection_causes_and_exception($index)
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        isset($speedBag[$index]);
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        isset($collection[$index]);
     }
 
     /**
@@ -208,8 +211,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_unsetting_an_element_at_invalid_indexes_in_the_collection_causes_and_exception($index)
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        unset($speedBag[$index]);
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        unset($collection[$index]);
     }
 
     public function invalidIndexProvider()
@@ -226,8 +229,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_accessing_an_element_at_a_invalid_string_index_throws_an_exception()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag['foo'];
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $collection['foo'];
     }
 
     /**
@@ -236,8 +239,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_setting_an_element_at_a_invalid_string_index_throws_an_exception()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag['foo'] = 'bar';
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $collection['foo'] = 'bar';
     }
 
     /**
@@ -246,8 +249,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_unsetting_an_element_at_a_invalid_string_index_throws_an_exception()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        unset($speedBag['foo']);
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        unset($collection['foo']);
     }
 
     /**
@@ -256,8 +259,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_checking_the_existence_of_an_element_at_a_invalid_string_index_throws_an_exception()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        isset($speedBag['foo']);
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        isset($collection['foo']);
     }
 
     public function test_that_flattening_a_collection_using_the_default_flatten_function_flattens_a_two_dimensional_array()
@@ -269,8 +272,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             [10]
         ];
 
-        $speedBag = new SpeedBag($arrayOfArrays);
-        $flattened = $speedBag->flatten();
+        $collection = new Collection($arrayOfArrays);
+        $flattened = $collection->flatten();
 
         $this->assertCount(10, $flattened);
         $this->assertEquals([1,2, 3, 4, 5, 6, 7, 8, 9, 10], $flattened->toArray());
@@ -289,8 +292,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             return [$elem];
         };
 
-        $speedBag = new SpeedBag($arrayOfArrays);
-        $flattened = $speedBag->flatten($dontFlatten);
+        $collection = new Collection($arrayOfArrays);
+        $flattened = $collection->flatten($dontFlatten);
 
         $this->assertCount(4, $flattened);
         $this->assertEquals($arrayOfArrays, $flattened->toArray());
@@ -312,8 +315,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             return $flattened;
         };
 
-        $speedBag = new SpeedBag($deepNest);
-        $flattened = $speedBag->flatten($recursiveFlatten);
+        $collection = new Collection($deepNest);
+        $flattened = $collection->flatten($recursiveFlatten);
 
         $this->assertCount(10, $flattened);
         $this->assertEquals([1,2, 3, 4, 5, 6, 7, 8, 9, 10], $flattened->toArray());
@@ -321,18 +324,18 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_contains_method_returns_correctly_when_looking_for_scalar_values()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        $collection = new Collection([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
-        $this->assertTrue($speedBag->contains(1));
-        $this->assertTrue($speedBag->contains(5));
-        $this->assertTrue($speedBag->contains(10));
+        $this->assertTrue($collection->contains(1));
+        $this->assertTrue($collection->contains(5));
+        $this->assertTrue($collection->contains(10));
 
-        $this->assertFalse($speedBag->contains(42));
+        $this->assertFalse($collection->contains(42));
     }
 
     public function test_that_the_contains_method_returns_correctly_when_using_a_custom_equality_function()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem ipsum dolor',
             'sit amet consectetur',
             'adipiscing elit sed',
@@ -345,31 +348,31 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             };
         };
 
-        $this->assertTrue($speedBag->contains($hasWord('elit')));
-        $this->assertFalse($speedBag->contains($hasWord('foo')));
+        $this->assertTrue($collection->contains($hasWord('elit')));
+        $this->assertFalse($collection->contains($hasWord('foo')));
     }
 
     public function test_that_the_first_method_returns_the_first_element_of_the_collection_when_called_without_an_argument()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertEquals(1, $speedBag->first());
+        $collection = new Collection([1, 2, 3, 4, 5]);
+        $this->assertEquals(1, $collection->first());
     }
 
     public function test_that_the_first_method_returns_the_first_matching_element_of_the_collection_when_called_with_a_scalar_argument()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertEquals(5, $speedBag->first(5));
+        $collection = new Collection([1, 2, 3, 4, 5]);
+        $this->assertEquals(5, $collection->first(5));
     }
 
     public function test_that_the_first_method_returns_null_when_no_matching_scalar_element_is_found_in_the_collection()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertNull($speedBag->first(42));
+        $collection = new Collection([1, 2, 3, 4, 5]);
+        $this->assertNull($collection->first(42));
     }
 
     public function test_that_the_first_method_returns_the_first_matching_element_of_the_collection_when_called_with_a_custom_function()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem ipsum dolor',
             'sit amet consectetur',
             'adipiscing elit sed',
@@ -380,12 +383,12 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             return false !== strpos($elem, 'sit amet');
         };
 
-        $this->assertEquals('sit amet consectetur', $speedBag->first($matcher));
+        $this->assertEquals('sit amet consectetur', $collection->first($matcher));
     }
 
     public function test_that_the_first_method_returns_null_when_no_matching_element_is_found_in_the_collection_using_a_custom_function()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem ipsum dolor',
             'sit amet consectetur',
             'adipiscing elit sed',
@@ -396,30 +399,30 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             return false !== strpos($elem, 'foo bar baz');
         };
 
-        $this->assertNull($speedBag->first($matcher));
+        $this->assertNull($collection->first($matcher));
     }
 
     public function test_that_the_last_method_returns_the_last_element_of_the_collection_when_called_without_an_argument()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertEquals(5, $speedBag->last());
+        $collection = new Collection([1, 2, 3, 4, 5]);
+        $this->assertEquals(5, $collection->last());
     }
 
     public function test_that_the_last_method_returns_the_last_matching_element_of_the_collection_when_called_with_a_scalar_argument()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertEquals(1, $speedBag->last(1));
+        $collection = new Collection([1, 2, 3, 4, 5]);
+        $this->assertEquals(1, $collection->last(1));
     }
 
     public function test_that_the_last_method_returns_null_when_no_matching_scalar_element_is_found_in_the_collection()
     {
-        $speedBag = new SpeedBag([1, 2, 3, 4, 5]);
-        $this->assertNull($speedBag->last(42));
+        $collection = new Collection([1, 2, 3, 4, 5]);
+        $this->assertNull($collection->last(42));
     }
 
     public function test_that_the_last_method_returns_the_last_matching_element_of_the_collection_when_called_with_a_custom_function()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem ipsum dolor',
             'sit amet consectetur',
             'adipiscing elit sed',
@@ -430,12 +433,12 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             return false !== strpos($elem, 'sit amet');
         };
 
-        $this->assertEquals('sit amet consectetur', $speedBag->last($matcher));
+        $this->assertEquals('sit amet consectetur', $collection->last($matcher));
     }
 
     public function test_that_the_last_method_returns_null_when_no_matching_element_is_found_in_the_collection_using_a_custom_function()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem ipsum dolor',
             'sit amet consectetur',
             'adipiscing elit sed',
@@ -446,16 +449,16 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
             return false !== strpos($elem, 'foo bar baz');
         };
 
-        $this->assertNull($speedBag->last($matcher));
+        $this->assertNull($collection->last($matcher));
     }
 
     /**
      * @dataProvider reverseProvider
      */
-    public function test_that_the_reverse_method_returns_a_new_SpeedBag_with_reversed_elements($original, $reversed)
+    public function test_that_the_reverse_method_returns_a_new_Collection_with_reversed_elements($original, $reversed)
     {
-        $speedBag = new SpeedBag($original);
-        $this->assertEquals($reversed, $speedBag->reverse()->toArray());
+        $collection = new Collection($original);
+        $this->assertEquals($reversed, $collection->reverse()->toArray());
     }
 
     public function reverseProvider()
@@ -468,35 +471,35 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_append_method_adds_an_element_to_the_end_of_the_collection()
     {
-        $speedBag = new SpeedBag(1);
+        $collection = new Collection(1);
 
-        $this->assertCount(0, $speedBag);
+        $this->assertCount(0, $collection);
 
-        $speedBag->append('foo');
+        $collection->append('foo');
 
-        $this->assertCount(1, $speedBag);
-        $this->assertEquals('foo', $speedBag[0]);
+        $this->assertCount(1, $collection);
+        $this->assertEquals('foo', $collection[0]);
     }
 
-    public function test_that_the_appending_to_a_full_SpeedBag_causes_the_collection_to_grow()
+    public function test_that_the_appending_to_a_full_Collection_causes_the_collection_to_grow()
     {
-        $speedBag = new SpeedBag(['foo']);
+        $collection = new Collection(['foo']);
 
-        $this->assertCount(1, $speedBag);
+        $this->assertCount(1, $collection);
 
-        $speedBag->append('bar');
+        $collection->append('bar');
 
-        $this->assertCount(2, $speedBag);
+        $this->assertCount(2, $collection);
     }
 
     public function test_that_the_groupBy_method_correctly_groups_elements_of_the_collection()
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem', 'ipsum', 'dolor', 'sit', 'amet',
             'consectetur', 'adipiscing', 'elit', 'sed', 'do'
         ]);
 
-        $grouped = $speedBag->groupBy(function ($elem) {
+        $grouped = $collection->groupBy(function ($elem) {
             return strlen($elem);
         });
 
@@ -517,79 +520,79 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_pop_method_removes_and_returns_the_last_element_of_the_collection()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
+        $collection = new Collection(['foo', 'bar', 'baz']);
 
-        $this->assertCount(3, $speedBag);
-        $this->assertEquals('baz', $speedBag->pop());
+        $this->assertCount(3, $collection);
+        $this->assertEquals('baz', $collection->pop());
 
-        $this->assertCount(2, $speedBag);
-        $this->assertNull($speedBag[2]);
+        $this->assertCount(2, $collection);
+        $this->assertNull($collection[2]);
     }
 
     public function test_that_the_pop_method_returns_null_when_the_collection_is_empty()
     {
-        $speedBag = new SpeedBag(1);
+        $collection = new Collection(1);
 
-        $this->assertCount(0, $speedBag);
-        $this->assertNull($speedBag->pop());
+        $this->assertCount(0, $collection);
+        $this->assertNull($collection->pop());
     }
 
     public function test_that_the_push_method_adds_an_element_to_the_end_of_the_collection()
     {
-        $speedBag = new SpeedBag(1);
+        $collection = new Collection(1);
 
-        $this->assertCount(0, $speedBag);
+        $this->assertCount(0, $collection);
 
-        $speedBag->push('foo');
+        $collection->push('foo');
 
-        $this->assertCount(1, $speedBag);
-        $this->assertEquals('foo', $speedBag[0]);
+        $this->assertCount(1, $collection);
+        $this->assertEquals('foo', $collection[0]);
     }
 
-    public function test_that_pushing_onto_a_full_SpeedBag_causes_the_collection_to_grow()
+    public function test_that_pushing_onto_a_full_Collection_causes_the_collection_to_grow()
     {
-        $speedBag = new SpeedBag(['foo']);
+        $collection = new Collection(['foo']);
 
-        $this->assertCount(1, $speedBag);
+        $this->assertCount(1, $collection);
 
-        $speedBag->push('bar');
+        $collection->push('bar');
 
-        $this->assertCount(2, $speedBag);
+        $this->assertCount(2, $collection);
     }
 
     public function test_that_adding_an_element_past_the_end_of_the_collection_grows_the_collection_to_accomodate_the_element()
     {
-        $speedBag = new SpeedBag(['foo', 'bar']);
-        $speedBag->append('baz');
+        $collection = new Collection(['foo', 'bar']);
+        $collection->append('baz');
 
-        $this->assertCount(3, $speedBag);
-        $this->assertEquals('baz', $speedBag[2]);
+        $this->assertCount(3, $collection);
+        $this->assertEquals('baz', $collection[2]);
     }
 
     public function test_that_the_prepend_method_adds_the_element_to_the_start_of_the_collection()
     {
-        $speedBag = new SpeedBag(['bar']);
+        $collection = new Collection(['bar']);
 
-        $this->assertCount(1, $speedBag);
-        $this->assertEquals('bar', $speedBag[0]);
+        $this->assertCount(1, $collection);
+        $this->assertEquals('bar', $collection[0]);
 
-        $speedBag->prepend('foo');
+        $collection->prepend('foo');
 
-        $this->assertCount(2, $speedBag);
-        $this->assertEquals('foo', $speedBag[0]);
-        $this->assertEquals('bar', $speedBag[1]);
+        $this->assertCount(2, $collection);
+        $this->assertEquals('foo', $collection[0]);
+        $this->assertEquals('bar', $collection[1]);
     }
 
-    public function test_that_a_SpeedBag_is_iterable()
+    public function test_that_a_Collection_is_iterable()
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz', null, null]);
+        $collection = new Collection(['foo', 'bar', 'baz', null, null]);
 
         $elems = [];
-        foreach ($speedBag as $index => $elem) {
+        foreach ($collection as $index => $elem) {
             $elems[$index] = $elem;
         }
 
-        $this->assertEquals($elems, $speedBag->toArray());
+        $this->assertEquals($elems, $collection->toArray());
     }
 
     /**
@@ -597,12 +600,12 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_slices_can_be_taken_using_array_indexing($index, $expected)
     {
-        $speedBag = new SpeedBag([
+        $collection = new Collection([
             'Lorem', 'ipsum', 'dolor', 'sit', 'amet',
             'consectetur', 'adipiscing', 'elit', 'sed', 'do'
         ]);
 
-        $this->assertEquals($expected, $speedBag[$index]->toArray());
+        $this->assertEquals($expected, $collection[$index]->toArray());
     }
 
     public function arrayIndexSliceProvider()
@@ -628,8 +631,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_an_exception_is_thrown_when_indexing_with_invalid_slice_notation($index)
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag[$index];
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $collection[$index];
     }
 
     public function invalidSliceIndexProvider()
@@ -647,8 +650,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_an_exception_is_thrown_when_indexing_with_invalid_take_notation($index)
     {
-        $speedBag = new SpeedBag(['foo', 'bar', 'baz']);
-        $speedBag[$index];
+        $collection = new Collection(['foo', 'bar', 'baz']);
+        $collection[$index];
     }
 
     public function invalidTakeIndexProvider()
@@ -661,8 +664,8 @@ class SpeedBagTest extends PHPUnit_Framework_TestCase
 
     public function test_that_indexes_containing_false_are_considered_populated()
     {
-        $speedBag = new SpeedBag([true, false, null]);
+        $collection = new Collection([true, false, null]);
 
-        $this->assertCount(2, $speedBag);
+        $this->assertCount(2, $collection);
     }
 }
