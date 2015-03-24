@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/colindecarlo/speed-bag.svg?branch=master)](https://travis-ci.org/colindecarlo/speed-bag)
+[![Build Status](https://travis-ci.org/colindecarlo/collection.svg?branch=master)](https://travis-ci.org/colindecarlo/collection)
 
 # Collection
 
