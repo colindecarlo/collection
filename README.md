@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/colindecarlo/speed-bag.svg?branch=master)](https://travis-ci.org/colindecarlo/speed-bag)
 
-# Speed Bag
+# Collection
 
-A collection library focused on delivering faster access to and iteration of its members.
+Collection is a library geared towards delivering a fast and intuitive interface over a group of related elements.
 
 ## Author
 
@@ -10,4 +10,4 @@ Colin DeCarlo, colin@thedecarlos.ca
 
 ## License
 
-Speed Bag is licensed under the MIT License - see the LICENSE file for details
+Collection is licensed under the MIT License - see the LICENSE file for details
