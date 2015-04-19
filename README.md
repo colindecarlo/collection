@@ -86,6 +86,29 @@ $dates = $stringyDates->map(function ($date) {
 ```
 
 ### each($func)
+
+Apply `$func` to each element of the collection. `each` returns the original collection so you can
+chain other methods off of it.
+
+#### Parameters
+
+<dl>
+  <dt>`$func`</dt>
+  <dd>The function which is applied to each elemement of the collection. `$func` can be any
+      [callable](callable) function.
+  </dd>
+</dl>
+
+#### Example
+
+```php
+$queueEmail = function ($address) use ($message, $emailQueue) {
+    $emailQueue->publish(['to' => $address, 'message' => $message]);
+};
+
+$adminEmails->each($queueEmail);
+```
+
 ### reduce($func, $carry)
 ### filter($func = null)
 ### slice($offset, $length = null)
