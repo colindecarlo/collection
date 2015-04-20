@@ -109,7 +109,42 @@ $queueEmail = function ($address) use ($message, $emailQueue) {
 $adminEmails->each($queueEmail);
 ```
 
-### reduce($func, $carry)
+### reduce($func, $intial)
+
+Reduce the elements contained in the collection down to a single value. `reduce` returns the
+reduced value computed by `$func`.
+
+#### Parameters
+
+<dl>
+  <dt>`$func`</dt>
+  <dd>The reducer function, this function accepts two parameters, `$carry` and `$elem` (in that
+      order) where `$carry` is the current value of the reduction and `$elem` is the current
+      element in the collection being reduced. `$func` can be any [callable](callable) function.
+  </dd>
+  <dt>`$initial`</dt>
+  <dd>The initial value to be used in the reduction</dd>
+</dl>
+
+#### Example
+
+```php
+$workSchedule = new Collection([
+     ['date' => '2015/04/20', 'start' => '08:00', 'end' => '12:00'],
+     ['date' => '2015/04/21', 'start' => '12:00', 'end' => '17:00'],
+     ['date' => '2015/04/23', 'start' => '08:00', 'end' => '17:00'],
+     ['date' => '2015/04/24', 'start' => '10:00', 'end' => '15:00']
+]);
+
+$totalHours = $workSchedule->reduce(function($total, $schedule) {
+    $start = DateTime::createFromFormat('Y/m/d H:i', $schedule['date'] . ' ' . $schedule['start']);
+    $end = DateTime::createFromFormat('Y/m/d H:i', $schedule['date'] . ' ' . $schedule['end']);
+    $hours = $end->diff($start)->h;
+    return $total + $hours;
+});
+// 25
+```
+
 ### filter($func = null)
 ### slice($offset, $length = null)
 ### flatten($flattenWith = null)
