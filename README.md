@@ -59,7 +59,7 @@ element of the original collection.
 
 <dl>
   <dt>`$func`</dt>
-  <dd>The function which is applied to each elemement of the collection. `$func` can be any
+  <dd>The function which is applied to each element of the collection. `$func` can be any
       [callable](callable) function.
   </dd>
 </dl>
@@ -94,7 +94,7 @@ chain other methods off of it.
 
 <dl>
   <dt>`$func`</dt>
-  <dd>The function which is applied to each elemement of the collection. `$func` can be any
+  <dd>The function which is applied to each element of the collection. `$func` can be any
       [callable](callable) function.
   </dd>
 </dl>
