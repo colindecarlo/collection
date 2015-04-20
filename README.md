@@ -146,6 +146,44 @@ $totalHours = $workSchedule->reduce(function($total, $schedule) {
 ```
 
 ### filter($func = null)
+
+Return a new Collection containing the elements for which `$func` returns `true`. If `$func` is
+not passed to `filter` then only truthy values contained in the original collection will be
+present in the result.
+
+#### Parameters
+
+<dl>
+  <dt>`$func`</dt>
+  <dd>The filter function for which each element of the collection is passed through. `$func`
+      returns `true` if the element should be kept and `false` if not.
+  </dd>
+</dl>
+
+#### Example
+
+```php
+$workSchedule = new Collection([
+     ['date' => '2015/04/20', 'start' => '08:00', 'end' => '12:00'],
+     ['date' => '2015/04/21', 'start' => '12:00', 'end' => '17:00'],
+     ['date' => '2015/04/23', 'start' => '08:00', 'end' => '17:00'],
+     ['date' => '2015/04/24', 'start' => '10:00', 'end' => '15:00']
+]);
+
+$packALunch = $workSchedule->filter(function($schedule) {
+    $start = DateTime::createFromFormat('Y/m/d H:i', $schedule['date'] . ' ' . $schedule['start']);
+    $end = DateTime::createFromFormat('Y/m/d H:i', $schedule['date'] . ' ' . $schedule['end']);
+    $hours = $end->diff($start)->h;
+    return $hours > 4;
+});
+// object(Collection)(
+     ['date' => '2015/04/21', 'start' => '12:00', 'end' => '17:00'],
+     ['date' => '2015/04/23', 'start' => '08:00', 'end' => '17:00'],
+     ['date' => '2015/04/24', 'start' => '10:00', 'end' => '15:00']
+)
+```
+
+
 ### slice($offset, $length = null)
 ### flatten($flattenWith = null)
 ### contains($value)
