@@ -111,8 +111,7 @@ $adminEmails->each($queueEmail);
 
 ### reduce($func, $intial)
 
-Reduce the elements contained in the collection down to a single value. `reduce` returns the
-reduced value computed by `$func`.
+Generate a single aggregate value derived from applying `$func` to each element of the collection.
 
 #### Parameters
 
