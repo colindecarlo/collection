@@ -182,9 +182,30 @@ $packALunch = $workSchedule->filter(function($schedule) {
 )
 ```
 
-
 ### slice($offset, $length = null)
 ### flatten($flattenWith = null)
+
+Transform a multi-dimensional collection into a one dimensional collection. The responsibilty of
+`$flattenWith` is to accept an element of the collection and return an arrray (or an object that
+implements both [Countable](countable) and [ArrayAccess](arrayaccess)) of the elements contained
+within that element. If a `flattenWith` function is not provided to `flatten` then the method
+will attempt to flatten the collection using a generic `flattenWith` function, this is useful
+for flattening a 2 dimensional collection.
+
+#### Parameters
+
+<dl>
+  <dt>`$func`</dt>
+  <dd>This function is used to flatten individual elements into single dimensional array.
+  </dd>
+</dl>
+
+#### Example
+
+
+
+
+
 ### contains($value)
 ### first($matching = null)
 ### last($matching = null)
